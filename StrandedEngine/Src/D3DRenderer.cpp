@@ -723,7 +723,7 @@ bool CD3DRenderer::CreateText(char *font, int weight, bool italic,
 void CD3DRenderer::DisplayText(int id, long x, long y,
                                int r, int g, int b, char *text, ...)
 {
-   RECT FontPosition = {x, y, m_screenWidth, m_screenWidth};
+   RECT FontPosition = {x, y, m_screenWidth, m_screenHeight};
    char message[1024];
    va_list argList;
 
@@ -741,7 +741,7 @@ void CD3DRenderer::DisplayText(int id, long x, long y,
 void CD3DRenderer::DisplayText(int id, long x, long y,
                                unsigned long color, char *text, ...)
 {
-   RECT FontPosition = {x, y, m_screenWidth, m_screenWidth};
+   RECT FontPosition = {x, y, m_screenWidth, m_screenHeight};
    char message[1024];
    va_list argList;
 

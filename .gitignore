@@ -1,0 +1,6 @@
+*.sdf
+*.suo
+Bin32/
+ipch/
+Temp/
+Lib/

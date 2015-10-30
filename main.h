@@ -8,6 +8,7 @@
 #ifndef _UGP_MAIN_H_
 #define _UGP_MAIN_H_
 
+#include <stdio.h>
 
 #include "engine.h"
 //#pragma comment(lib, "lib/StrandedEngine.lib")

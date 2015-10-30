@@ -25,6 +25,8 @@ int g_arialID = -1;
 bool LMBDown = false;
 int mouseX = 0, mouseY = 0;
 
+void ShowLog();
+
 
 LRESULT WINAPI MsgProc(HWND hd, UINT msg, WPARAM wp, LPARAM lp)
 {
@@ -39,8 +41,9 @@ LRESULT WINAPI MsgProc(HWND hd, UINT msg, WPARAM wp, LPARAM lp)
             if(wp == VK_ESCAPE) PostQuitMessage(0);
             break;
 
-         case WM_LBUTTONDOWN:
-            LMBDown = true;
+		 case WM_LBUTTONDOWN:
+			LMBDown = true;
+			//MainMenuRender();
             break;
 
          case WM_LBUTTONUP:
@@ -68,16 +71,19 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPSTR cmd, int show)
    // Create the application's window
    if(FULLSCREEN)
       {
-         g_hwnd = CreateWindowEx(NULL, WINDOW_CLASS, WINDOW_NAME,
+		 g_hwnd = CreateWindowEx(NULL, WINDOW_CLASS, WINDOW_NAME,
                         WS_POPUP | WS_SYSMENU | WS_VISIBLE, 0, 0,
                         WIN_WIDTH, WIN_HEIGHT,
                         NULL, NULL, h, NULL);
       }
    else
       {
-         g_hwnd = CreateWindowEx(NULL, WINDOW_CLASS, WINDOW_NAME,
+		 const int sys_min_height = GetSystemMetrics(SM_CYMIN);  
+		 const int sys_caption_height = GetSystemMetrics(SM_CYSMCAPTION);  
+		 g_hwnd = CreateWindowEx(NULL, WINDOW_CLASS, WINDOW_NAME,
                               WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0,
-                              0, WIN_WIDTH, WIN_HEIGHT,
+                              0, WIN_WIDTH + (sys_min_height - sys_caption_height),
+							  WIN_HEIGHT + sys_min_height,
                               NULL, NULL, h, NULL);
       }
 
@@ -131,7 +137,7 @@ bool InitializeEngine()
 
    g_Render->SetClearCol(0, 0, 0);
 
-   if(!g_Render->CreateText("Arial", 0, true, 18, g_arialID))
+   if(!g_Render->CreateText("Times New Roman", 0, false, 18, g_arialID))
       return false;
 
    return true;
@@ -193,10 +199,13 @@ bool InitializeMainMenu()
       "menu/level1Down.png")) return false;
 
    if(!g_Render->AddGUIButton(g_startGui, BUTTON_BACK_ID,
-      PERCENT_OF(WIN_WIDTH, 0.1), PERCENT_OF(WIN_HEIGHT, 0.80),
-      "menu/backUp.png", "menu/backOver.png",
-      "menu/backDown.png")) return false;
-
+	   PERCENT_OF(WIN_WIDTH, 0.1), PERCENT_OF(WIN_HEIGHT, 0.80),
+	   "menu/backUp.png", "menu/backOver.png",
+	   "menu/backDown.png")) return false;
+   //if(!g_Render->AddGUIButton(g_startGui, BUTTON_BACK_ID,
+   // PERCENT_OF(WIN_WIDTH, 0.0), PERCENT_OF(WIN_HEIGHT, 0.0),
+   // "menu/backUp.png", "menu/backOver.png",
+   // "menu/backDown.png")) return false;
 
    // Set credits screen elements.
    if(!g_Render->AddGUIStaticText(g_creditsGui, STATIC_TEXT_ID,
@@ -333,6 +342,9 @@ void MainMenuRender()
          g_Render->ProcessGUI(g_creditsGui, LMBDown, mouseX,
                               mouseY, MainMenuCallback);
 
+
+	ShowLog();
+
    g_Render->EndRendering();
 }
 
@@ -342,6 +354,17 @@ bool GameInitialize()
    if(!InitializeMainMenu()) return false;
 
    return true;
+}
+
+void ShowLog()
+{
+	if(!g_Render)
+	{
+		return;
+	}
+	char szLog[128] = {0};
+	sprintf(szLog, "%d,%d",mouseX,mouseY);
+	g_Render->DisplayText(0,400,0,UGPCOLOR_ARGB(255,0,128,255),szLog);
 }
 
 
